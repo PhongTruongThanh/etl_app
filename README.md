@@ -16,36 +16,6 @@ Dự án này bao gồm các thành phần chính sau:
 7. **`notebook`**: Chứa các Jupyter notebook cho việc phân tích và trực quan hóa dữ liệu.
 8. **`schedule`**: Thư mục liên quan đến việc lên lịch cho các tác vụ ETL hoặc các tác vụ định kỳ khác.
 
-## Hướng dẫn sử dụng
-
-### Cài đặt yêu cầu
-
-Trước khi chạy dự án, bạn cần cài đặt một số thư viện và công cụ sau:
-
-1. **Python**: Đảm bảo rằng bạn đã cài đặt Python 3.x trên máy của mình.
-2. **DuckDB**: Đây là cơ sở dữ liệu sử dụng trong dự án. Bạn có thể cài đặt DuckDB thông qua pip:
-   ```bash
-   pip install duckdb
-   ```
-
-3. **Các thư viện Python khác**: Các thư viện cần thiết có thể được cài đặt bằng cách sử dụng `requirements.txt`. Nếu file này có sẵn trong dự án, bạn có thể sử dụng lệnh sau:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### Chạy ứng dụng
-
-1. **Chạy quy trình ETL**: Để thực hiện quá trình ETL, bạn có thể chạy file `api_to_dw.py`. Đảm bảo rằng bạn đã cấu hình đúng các kết nối API và các thông số liên quan.
-   
-   Ví dụ:
-   ```bash
-   python api_to_dw.py
-   ```
-
-2. **Lên lịch các tác vụ ETL**: Thư mục `schedule` có thể chứa các script để tự động hóa quá trình ETL. Bạn có thể sử dụng cron jobs hoặc các công cụ lập lịch tác vụ tương tự để chạy các tác vụ này định kỳ.
-
-3. **Xem và phân tích dữ liệu**: Bạn có thể sử dụng các notebook trong thư mục `notebook` để trực quan hóa và phân tích dữ liệu sau khi ETL hoàn tất.
-
 ## Kiến trúc dự án
 
 - **Frontend**: Không có phần frontend trong dự án này.
