@@ -29,4 +29,5 @@ Dự án này bao gồm các thành phần chính sau:
 - **Tải dữ liệu vào Data Warehouse**: Dữ liệu sau khi được xử lý được tải vào cơ sở dữ liệu DuckDB.
 - **Lập lịch tự động**: Quá trình ETL có thể được tự động hóa thông qua các tác vụ đã lên lịch.
 
-
+# Docs link: 
+https://wise-bard-bd3.notion.site/ETL-Document-1acaceae7fe680ff9853c1b8e6219d0a?pvs=4
