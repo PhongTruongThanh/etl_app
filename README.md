@@ -1,33 +1,128 @@
 
-# ETL App
 
-Dự án này là một ứng dụng ETL (Extract, Transform, Load) sử dụng các công cụ và thư viện Python để xử lý dữ liệu, chuyển đổi và tải lên một cơ sở dữ liệu Data Warehouse. Ứng dụng này có thể kết nối với API, thực hiện các phép toán ETL và lưu trữ dữ liệu vào cơ sở dữ liệu DuckDB.
 
-## Nội dung dự án
+# 📊 ETL App
 
-Dự án này bao gồm các thành phần chính sau:
+## 🧠 Overview
 
-1. **SQL**: Chứa các file SQL liên quan đến quy trình ETL, bao gồm các truy vấn, bảng dữ liệu, và các lệnh tạo cơ sở dữ liệu.
-2. **`__pycache__`**: Thư mục chứa các file bytecode của Python.
-3. **`api_to_dw.py`**: File Python dùng để chuyển dữ liệu từ API vào Data Warehouse.
-4. **`backend`**: Chứa các thành phần backend của ứng dụng, có thể là các logic xử lý dữ liệu và quản lý ứng dụng.
-5. **`datawarehouse.duckdb`**: Cơ sở dữ liệu DuckDB nơi dữ liệu được lưu trữ sau khi quá trình ETL hoàn tất.
-6. **`elt`**: Thư mục này có thể chứa các script ETL thực hiện việc truy xuất, biến đổi và tải dữ liệu.
-7. **`notebook`**: Chứa các Jupyter notebook cho việc phân tích và trực quan hóa dữ liệu.
-8. **`schedule`**: Thư mục liên quan đến việc lên lịch cho các tác vụ ETL hoặc các tác vụ định kỳ khác.
+**Final ETL App** is a fully automated end-to-end ETL system designed to collect, transform, and store financial market data from multiple APIs. It enables robust market analysis, stock trend evaluation, sentiment analytics, and industry performance tracking.
 
-## Kiến trúc dự án
+Built with modern cloud and data engineering tools such as **Google Cloud Platform (GCP)**, **Apache Airflow**, **DuckDB**, **Hadoop**, and **Spark**, this system powers business intelligence tools like **Power BI** to support strategic decision-making in financial contexts.
 
-- **Frontend**: Không có phần frontend trong dự án này.
-- **Backend**: Các quy trình backend xử lý dữ liệu từ API và tương tác với cơ sở dữ liệu DuckDB.
-- **Data Warehouse**: Dữ liệu được lưu trữ trong cơ sở dữ liệu DuckDB, cho phép truy vấn và phân tích sau này.
+---
 
-## Các tính năng chính
+## ❓ Problem Statement & Objectives
 
-- **Trích xuất dữ liệu từ API**: Quá trình ETL trích xuất dữ liệu từ các API.
-- **Chuyển đổi dữ liệu**: Dữ liệu được biến đổi để phù hợp với yêu cầu của Data Warehouse.
-- **Tải dữ liệu vào Data Warehouse**: Dữ liệu sau khi được xử lý được tải vào cơ sở dữ liệu DuckDB.
-- **Lập lịch tự động**: Quá trình ETL có thể được tự động hóa thông qua các tác vụ đã lên lịch.
+In the financial world, real-time and reliable data is crucial for tracking market trends, investment decisions, and risk management. However, manually gathering and processing this vast amount of dynamic information is both labor-intensive and error-prone.
+
+**Final ETL App** addresses these challenges by:
+
+- ✅ Automatically extracting data from multiple trusted financial APIs  
+- ✅ Transforming and cleaning large volumes of raw data  
+- ✅ Structuring the data into an analytics-friendly warehouse format  
+- ✅ Serving the data to visualization and AI tools to generate valuable insights  
+
+---
+
+## 📥 Input Data Sources
+
+This project integrates four key financial APIs:
+
+- **sec-api.io**  
+  → Public company listings, financial identifiers, sector and industry classification
+
+- **Alpha Vantage**  
+  → Market Status: Global exchange statuses  
+  → News Sentiment: Analyzes financial news articles and computes sentiment scores
+
+- **Polygon.io**  
+  → Daily OHLC (Open, High, Low, Close) stock prices and trading volumes
+
+> **Volume**: ~10,000 stock rows & 500 news articles per day; ~28,000 company records per month
+
+---
+
+## 🏗️ Data Warehouse Architecture
+
+- **Model**: Galaxy Schema (variant of Star Schema with multiple fact tables and shared dimensions)  
+- **Storage Engine**: DuckDB – lightweight, analytical OLAP database  
+
+### Schema Includes:
+
+**Dimensions**:  
+- `dim_companies`  
+- `dim_time`  
+- `dim_exchanges`  
+- `dim_industries`
+
+**Facts**:  
+- `fact_ohlc`  
+- `fact_sentiment`  
+- `fact_volume`  
+- `fact_sector_analysis`
+
+---
+
+## ⚙️ System Design & ETL Flow
+
+### 1. Extraction  
+- Automated via Python + Airflow DAGs  
+- Scheduled fetches from APIs (daily, monthly)
+
+### 2. Transformation  
+- Cleaning and formatting with Python  
+- Schema mapping and data enrichment  
+- **Spark** for scalable data operations
+
+### 3. Loading  
+- Loaded into DuckDB  
+- Stored in 3NF-compliant structured tables
+
+### 4. Orchestration & Deployment  
+- **Airflow** for DAG management  
+- Deployed on **Google Compute Engine**  
+- Remote access via **VSCode + SSH**  
+- Optional raw data storage in **Hadoop HDFS**
+
+### 5. Data Access & Visualization  
+- Flask API + Gunicorn expose endpoints  
+- Integrated with **Power BI** for dashboarding
+
+---
+
+## 📈 Business Results & Applications
+
+Final ETL App delivers:
+
+- 📊 Daily updated insights on stock performance and volume trends  
+- 🧾 Financial news sentiment monitoring  
+- 🏢 Sector-based analysis for investment decision-making  
+- 🤖 Data provisioning for machine learning and BI platforms  
+
+---
+
+## 💻 Tech Stack
+
+- **Programming**: Python, SQL  
+- **Data Storage**: DuckDB, HDFS  
+- **Processing**: Spark  
+- **Scheduling**: Apache Airflow  
+- **Cloud**: Google Cloud Platform (Compute Engine)  
+- **Visualization**: Power BI  
+
+---
+
+## 👥 Who is this for?
+
+This project is ideal for:
+
+- Financial Analysts  
+- Data Engineers  
+- BI Developers  
+- Quantitative Researchers  
+- Organizations building data-driven investment strategies
+
+---
 
 # Docs link: 
 https://wise-bard-bd3.notion.site/ETL-Document-1acaceae7fe680ff9853c1b8e6219d0a?pvs=4
