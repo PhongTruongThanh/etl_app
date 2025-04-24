@@ -1,128 +1,156 @@
+# **Financial Data ETL Pipeline**
 
-
-
-# 📊 ETL App
-
-## 🧠 Overview
-
-**Final ETL App** is a fully automated end-to-end ETL system designed to collect, transform, and store financial market data from multiple APIs. It enables robust market analysis, stock trend evaluation, sentiment analytics, and industry performance tracking.
-
-Built with modern cloud and data engineering tools such as **Google Cloud Platform (GCP)**, **Apache Airflow**, **DuckDB**, **Hadoop**, and **Spark**, this system powers business intelligence tools like **Power BI** to support strategic decision-making in financial contexts.
+This project is an **ETL pipeline** designed for processing and analyzing vast amounts of **financial data** sourced from various APIs. The goal is to collect, transform, and store data to help in financial market analysis, stock price trend prediction, and sentiment analysis of market news.
 
 ---
 
-## ❓ Problem Statement & Objectives
+## **Table of Contents**
 
-In the financial world, real-time and reliable data is crucial for tracking market trends, investment decisions, and risk management. However, manually gathering and processing this vast amount of dynamic information is both labor-intensive and error-prone.
-
-**Final ETL App** addresses these challenges by:
-
-- ✅ Automatically extracting data from multiple trusted financial APIs  
-- ✅ Transforming and cleaning large volumes of raw data  
-- ✅ Structuring the data into an analytics-friendly warehouse format  
-- ✅ Serving the data to visualization and AI tools to generate valuable insights  
-
----
-
-## 📥 Input Data Sources
-
-This project integrates four key financial APIs:
-
-- **sec-api.io**  
-  → Public company listings, financial identifiers, sector and industry classification
-
-- **Alpha Vantage**  
-  → Market Status: Global exchange statuses  
-  → News Sentiment: Analyzes financial news articles and computes sentiment scores
-
-- **Polygon.io**  
-  → Daily OHLC (Open, High, Low, Close) stock prices and trading volumes
-
-> **Volume**: ~10,000 stock rows & 500 news articles per day; ~28,000 company records per month
+1. [Project Overview](#project-overview)
+2. [Problem Statement](#problem-statement)
+3. [Data Sources](#data-sources)
+4. [ETL Process](#etl-process)
+5. [Processing Framework](#processing-framework)
+6. [Data Warehouse Design](#data-warehouse-design)
+7. [Business Results & Applications](#business-results-applications)
+8. [Technologies Used](#technologies-used)
 
 ---
 
-## 🏗️ Data Warehouse Architecture
+## **Project Overview**
 
-- **Model**: Galaxy Schema (variant of Star Schema with multiple fact tables and shared dimensions)  
-- **Storage Engine**: DuckDB – lightweight, analytical OLAP database  
+This **ETL pipeline** automates the extraction, transformation, and loading of data from **financial APIs** to provide valuable insights into stock prices, market sentiment, and other crucial financial metrics. The processed data is stored in a **Data Warehouse** and used for real-time analysis and business decision-making.
 
-### Schema Includes:
+The project handles a vast amount of data on a daily basis, providing actionable insights such as stock price trends, sentiment analysis, and trading volumes. These insights can be used for forecasting, portfolio management, and understanding broader market trends.
 
-**Dimensions**:  
-- `dim_companies`  
-- `dim_time`  
-- `dim_exchanges`  
-- `dim_industries`
+![ETL Tool Diagram](https://drive.google.com/uc?export=view&id=1EUY0zTvZbqC9UaXgvM7wCJDYkx73lpgU)
+---
 
-**Facts**:  
-- `fact_ohlc`  
-- `fact_sentiment`  
-- `fact_volume`  
-- `fact_sector_analysis`
+## **Problem Statement**
+
+The primary challenge addressed by this project is the ability to analyze and visualize large-scale financial data in real-time. Financial analysts, traders, and decision-makers need accurate and timely insights into stock market performance, news sentiment, and sector trends. This involves several problems:
+
+- **Data Integration**: Collecting data from multiple sources with different formats.
+- **Data Transformation**: Normalizing and cleaning raw data to make it usable for analysis.
+- **Scalability**: Processing millions of data points efficiently.
+- **Timeliness**: Ensuring data is updated and available for analysis on a daily basis.
+  
+This project aims to solve these problems using an efficient ETL pipeline and data storage system.
 
 ---
 
-## ⚙️ System Design & ETL Flow
+## **Data Sources**
 
-### 1. Extraction  
-- Automated via Python + Airflow DAGs  
-- Scheduled fetches from APIs (daily, monthly)
+The project uses data from several key APIs:
 
-### 2. Transformation  
-- Cleaning and formatting with Python  
-- Schema mapping and data enrichment  
-- **Spark** for scalable data operations
+1. **sec-api.io**: 
+   - Provides data on companies listed on stock exchanges such as NYSE and NASDAQ.
+   - Includes company details like sector, industry, and market category.
 
-### 3. Loading  
-- Loaded into DuckDB  
-- Stored in 3NF-compliant structured tables
+2. **Alpha Vantage**: 
+   - Market status API: Provides real-time stock market updates.
+   - News sentiment API: Fetches financial news articles along with sentiment scores to gauge market mood.
 
-### 4. Orchestration & Deployment  
-- **Airflow** for DAG management  
-- Deployed on **Google Compute Engine**  
-- Remote access via **VSCode + SSH**  
-- Optional raw data storage in **Hadoop HDFS**
-
-### 5. Data Access & Visualization  
-- Flask API + Gunicorn expose endpoints  
-- Integrated with **Power BI** for dashboarding
+3. **Polygon.io**: 
+   - Offers daily OHLC (Open, High, Low, Close) data for US stocks.
+   - Provides trading volume and other metrics for stock performance analysis.
 
 ---
 
-## 📈 Business Results & Applications
+## **ETL Process**
 
-Final ETL App delivers:
+### **Extract**:
+- Data is automatically extracted from the APIs at scheduled intervals:
+  - **sec-api.io** and **Alpha Vantage (market status)**: Extracted once a month as their data does not change frequently.
+  - **Alpha Vantage (news sentiment)** and **Polygon**: Extracted daily to capture real-time stock market data.
 
-- 📊 Daily updated insights on stock performance and volume trends  
-- 🧾 Financial news sentiment monitoring  
-- 🏢 Sector-based analysis for investment decision-making  
-- 🤖 Data provisioning for machine learning and BI platforms  
+### **Transform**:
+- The data is cleaned and normalized:
+  - Raw financial data is merged into a common format, making it ready for analysis.
+  - Sentiment scores from news articles are computed based on predefined thresholds (e.g., bullish, bearish).
+
+### **Load**:
+- Data is stored in a **PostgreSQL** or **DuckDB** database:
+  - Company data is loaded into the database once a month.
+  - Daily stock data (OHLC) and sentiment analysis results are loaded daily into the system.
+
+![Taskflow Diagram](https://drive.google.com/uc?export=view&id=1aq8p1LmotMVuU_ut0hRwjN2-ti6zsAqw)
+![Taskflow Diagram 2](https://drive.google.com/uc?export=view&id=15pg1rb1NzD3eoAy8KSo2lkzHDC7v43CL)
+---
+
+## **Processing Framework**
+
+The system uses the following tools and frameworks to process and manage data:
+
+1. **Hadoop**:
+   - Deployed as a **single-node cluster** for distributed storage using **HDFS**.
+   - **YARN** is used for resource management, enabling the processing of large datasets.
+
+2. **Apache Airflow**:
+   - Manages the ETL pipeline by automating the extraction, transformation, and loading of data.
+   - Airflow schedules and monitors workflows, ensuring that data processing runs smoothly without manual intervention.
+
+3. **Python & Spark**:
+   - **PySpark** is used for distributed data processing.
+   - Python libraries such as **Pandas** and **SQLAlchemy** handle data transformation and database management.
 
 ---
 
-## 💻 Tech Stack
+## **Data Warehouse Design**
 
-- **Programming**: Python, SQL  
-- **Data Storage**: DuckDB, HDFS  
-- **Processing**: Spark  
-- **Scheduling**: Apache Airflow  
-- **Cloud**: Google Cloud Platform (Compute Engine)  
-- **Visualization**: Power BI  
+The **Data Warehouse** is structured using a **Galaxy Schema** to support various business requirements, such as stock price trends, market sentiment, and trading volumes.
 
----
+1. **Fact Tables**:
+   - **Stock Prices**: Contains OHLC data, trading volume, and other stock performance metrics.
+   - **Market Sentiment**: Stores sentiment scores, sentiment labels, and associated news articles.
+   
+2. **Dimension Tables**:
+   - **Companies**: Contains company details like sector, industry, and market category.
+   - **Dates**: Used for time-based analysis of stock trends.
 
-## 👥 Who is this for?
+The database is designed using the **3NF** (Third Normal Form) to ensure efficient data storage and retrieval.
 
-This project is ideal for:
-
-- Financial Analysts  
-- Data Engineers  
-- BI Developers  
-- Quantitative Researchers  
-- Organizations building data-driven investment strategies
+![Data Warehouse Schema](https://drive.google.com/uc?export=view&id=1KbMDfFyn1_-TwIqHeS4AcU4do-hsunMD)
 
 ---
 
-# Docs link: 
-https://wise-bard-bd3.notion.site/ETL-Document-1acaceae7fe680ff9853c1b8e6219d0a?pvs=4
+## **Business Results Applications**
+
+The ETL pipeline helps derive the following key business insights:
+
+1. **Stock Price Trends**:
+   - Track and predict stock price movements (up, down, or stable) over various timeframes (daily, weekly, monthly).
+   
+2. **Market Sentiment Analysis**:
+   - Monitor overall market sentiment (bullish, bearish, or neutral) based on financial news.
+   - Understand how specific news events impact stock prices.
+
+3. **Trading Volume Analysis**:
+   - Identify unusual trading volumes and correlate them with price fluctuations.
+   
+4. **Sector Performance**:
+   - Analyze the performance of different sectors in the stock market and identify potential investment opportunities.
+
+These insights are stored in a data warehouse, allowing users to query historical data and generate reports using visualization tools like **Power BI**. 
+You can view the Power BI dashboard by clicking on the following link:
+
+[Power BI Dashboard PDF](https://drive.google.com/uc?export=download&id=1TEuUNJVXYstVPzS4_m5TEi14rsKFfls6)
+
+---
+
+## **Technologies Used**
+
+- **Data Sources**: sec-api.io, Alpha Vantage, Polygon.io
+- **ETL Tools**: Apache Airflow, Python, PySpark
+- **Data Storage**: PostgreSQL, DuckDB
+- **Big Data Framework**: Hadoop (HDFS, YARN)
+- **Business Intelligence**: Power BI
+- **Cloud Platform**: Google Compute Engine (GCP)
+
+---
+
+## **Further Documentation**
+
+For detailed information and development documentation click on this link:  
+[ETL Documentation](https://wise-bard-bd3.notion.site/ETL-Document-1acaceae7fe680ff9853c1b8e6219d0a?pvs=4)
+
